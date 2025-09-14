@@ -174,10 +174,10 @@ void loop() {
   /*Проверяет температуру, переменную отключения компрессора, состояние клапана.*/
   // uint8_t tmpr = 0;
   // bool error;
-
-    if (isComprOn == 0 && flag == false) {
+    unsigned long currentMillis = millis();
+  if (isComprOn == 1 && flag == false) {
     digitalWrite(compr, HIGH);
-  } else if (isComprOn == 1 || flag == true) {
+  } else if (isComprOn == 0 || flag == true) {
     digitalWrite(compr, LOW);
     comprEndCycle();
   }
@@ -195,24 +195,26 @@ void loop() {
     if (millis() - myTimer4 >= 1800000) {
       myTimer4 = millis();  // сбросить таймер
       flag = true;// Флаг подняли
+      isComprOn == 0;
       //comprEndCycle();  
       delay(5);
     }
-    unsigned long currentMillis = millis();
+    
 
   if (!isLoadOn && currentMillis - previousMillis >= intervalOff) {
-    // Включаем нагрузку после интервала выключения
-    isLoadOn = true;
-    previousMillis = currentMillis;
-    digitalWrite(fanPin, HIGH);
-  } else if (isLoadOn && currentMillis - previousMillis >= intervalOn) {
-    // Выключаем нагрузку после интервала включения
-    isLoadOn = false;
-    previousMillis = currentMillis;
-    digitalWrite(fanPin, LOW);
-  }
+      // Включаем нагрузку после интервала выключения
+        isLoadOn = true;
+        previousMillis = currentMillis;
+        digitalWrite(fanPin, HIGH);
+      } else if (isLoadOn && currentMillis - previousMillis >= intervalOn) {
+        // Выключаем нагрузку после интервала включения
+        isLoadOn = false;
+        previousMillis = currentMillis;
+        digitalWrite(fanPin, LOW);
+      }
 
   }
+
   if (isCheckingPass) {
     getTempAdd();                  // Проверяем тем-ру
     termo.setTempOld(thol, tmor);  // Записываем в память
