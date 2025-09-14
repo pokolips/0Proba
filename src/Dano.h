@@ -36,6 +36,11 @@ const unsigned long defrostTime = 43200000;   //Интервал запуска 
 const unsigned long comprEndTimes = 900000;
 const unsigned long comprCycleTime = 1200000;
 unsigned long periodTime = 0;
+ 
+unsigned long previousMillis = 0;
+bool isLoadOn = false;
+const unsigned long intervalOn = 30000; // 30 секунд (в миллисекундах)
+const unsigned long intervalOff = 300000; // 5 минут (300000 мс)
 //Переменные
 unsigned long lastDefrostTime;
 unsigned long timing, timing1;

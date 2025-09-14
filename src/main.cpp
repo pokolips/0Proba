@@ -198,6 +198,20 @@ void loop() {
       //comprEndCycle();  
       delay(5);
     }
+    unsigned long currentMillis = millis();
+
+  if (!isLoadOn && currentMillis - previousMillis >= intervalOff) {
+    // Включаем нагрузку после интервала выключения
+    isLoadOn = true;
+    previousMillis = currentMillis;
+    digitalWrite(fanPin, HIGH);
+  } else if (isLoadOn && currentMillis - previousMillis >= intervalOn) {
+    // Выключаем нагрузку после интервала включения
+    isLoadOn = false;
+    previousMillis = currentMillis;
+    digitalWrite(fanPin, LOW);
+  }
+
   }
   if (isCheckingPass) {
     getTempAdd();                  // Проверяем тем-ру
