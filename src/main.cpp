@@ -190,7 +190,7 @@ void loop() {
     delay(5);
   }
 
-  if (compr == HIGH) {
+  if (digitalRead(compr) == HIGH) {// Ещё одна ошибка
     s = (F("ON"));                          //Повторения не будет?----------
     if (millis() - myTimer4 >= 1800000) {
       myTimer4 = millis();  // сбросить таймер
@@ -264,8 +264,8 @@ void comprEndCycle() {
   wrk = (F("PAUSE"));
   // imp = isWorkKlap;
   s4 = (F("EndCy"));
-  s1 = (F("P"));
-  provH = (F("cEndC"));
+  //s1 = (F("P"));
+  //provH = (F("cEndC"));
   int i = 15;
 
   unsigned long comprTimeStamp = millis();  //Время включения компрессора
