@@ -193,9 +193,10 @@ void loop() {
 
   if (digitalRead(compr) == HIGH) {// Ещё одна ошибка
     s = (F("ON"));                          //Повторения не будет?----------
-    if (millis() - myTimer4 >= 1800000) {
+    if (millis() - myTimer4 >= 2400000) {
       myTimer4 = millis();  // сбросить таймер
       flag = true;// Флаг подняли
+      stch = 0;
       isComprOn == 0;
       //comprEndCycle();  
       delay(5);
