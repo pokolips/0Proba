@@ -179,6 +179,7 @@ void loop() {
     digitalWrite(compr, HIGH);
   } else if (isComprOn == 0 || flag == true) {
     digitalWrite(compr, LOW);
+    s = (F("OFF"));
     comprEndCycle();
   }
 
