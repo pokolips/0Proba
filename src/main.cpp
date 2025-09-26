@@ -18,7 +18,6 @@ void getTempAdd() {
   termo.setTemperature();     //Запрос на считывание температуры с датчиков
   thol = termo.getTempHol();  //Получение температуры холодильной камеры
   tmor = termo.getTempMor();  //Получение температуры морозильной камеры
-  tisp = termo.getTempIsp();
 }
 // *************Функция дисплея*******************************************
 void displ_Vvod() {
@@ -179,7 +178,6 @@ void loop() {
     digitalWrite(compr, HIGH);
   } else if (isComprOn == 0 || flag == true) {
     digitalWrite(compr, LOW);
-    s = (F("OFF"));
     comprEndCycle();
   }
 
