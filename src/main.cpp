@@ -48,22 +48,22 @@ void text_Prob() {
   u8g.print(F(" Mor: "));
   //u8g.setPrintPos(40,0);
   u8g.print(tmor);
-  u8g.setPrintPos(100, 0);
-  //u8g.print(F(" n"));
+  u8g.setPrintPos(88, 0);
+  u8g.print(F(" n"));
   // u8g.setPrintPos(74, 0);  ---- ???????
-     u8g.print(tisp);
+  //   u8g.print(tisp);
   u8g.setPrintPos(4, 12);
   u8g.print F("Work:");
   u8g.print(wrk);  // работа устройства (камеры)F("Work:")
-                   u8g.setPrintPos(56, 18);
+                   //   //u8g.setPrintPos(56, 18);
                    //   u8g.print(wrk); // переменная устройства
                    //   u8g.setPrintPos(64, 12);
-                    u8g.print (F("Compr:")); //"Klap: "com
+                   //   u8g.print (F("Klap:")); //"Klap: "com
                    //   // u8g.print (": "); //(knopOsv);
-                    u8g.print (s); //(knopOsv);
-                    u8g.setPrintPos(0, 24);
-                    u8g.print(F("workMor:"));
-                    u8g.print(workMor);
+                   //   u8g.print (kl); //(knopOsv);
+                      u8g.setPrintPos(0, 24);
+                      u8g.print(F("workMor:"));
+                      u8g.print(workMor);
                    //   u8g.setPrintPos(68, 24);
                    //   u8g.print (F("imp: "));
                    // // myString s;
@@ -74,14 +74,14 @@ void text_Prob() {
   u8g.print(s1);
   //   //u8g.print(isWorkKlap); //s4 "/ "
   //   u8g.print(emagn);
-     u8g.setPrintPos(68, 36);
-     u8g.print(com);//   u8g.print(stm);
+  //   u8g.setPrintPos(68, 36);
+  //   u8g.print(stm);
   //   u8g.print(summHol);
   //   u8g.print(F(":"));
   //   u8g.print(summMor);
-     u8g.setPrintPos(0, 48);
-     u8g.print(F("SummMor:"));
-     u8g.print(isSummIsp);
+  //   u8g.setPrintPos(0, 48);
+  //   u8g.print(F("SummIs:"));
+  //   u8g.print(isSummIsp);
   //   u8g.setPrintPos(68, 48);
   //   u8g.print(F("New:"));
   //     u8g.print(vs);
@@ -133,7 +133,7 @@ void setup() {
   delay(30000);  //900000; 15 минут
   prKn == 1;
   comprEndCycle();  //Функция задержки
-  //getTempAdd();     //Получение температуры
+  getTempAdd();     //Получение температуры
   //proverkaKn();// Функция проверки положения клапана
   //if (prKn == 1) {
     proverkaKn();  // Функция проверки положения клапана
@@ -164,6 +164,7 @@ void awr() {
   if (millis() - debounce1 >= 100 && digitalRead(3)) {
     debounce = millis();
   }
+  klapan(kn);
   // ваш код по прерыванию по высокому сигналу
 }
 
@@ -171,12 +172,12 @@ void awr() {
 //##################### Основной цикл  #####################
 void loop() {
   /*Проверяет температуру, переменную отключения компрессора, состояние клапана.*/
-  // uint8_t tmpr = 0;
-  // bool error;
-    unsigned long currentMillis = millis();
-  if (isComprOn == 1 && flag == false) {
+  uint8_t tmpr = 0;
+  bool error;
+
+    if (isComprOn == 0 && !flag) {
     digitalWrite(compr, HIGH);
-  } else if (isComprOn == 0 || flag == true) {
+  } else if (isComprOn == 1 || flag) {
     digitalWrite(compr, LOW);
     comprEndCycle();
   }
@@ -189,32 +190,14 @@ void loop() {
     delay(5);
   }
 
-  if (digitalRead(compr) == HIGH) {// Ещё одна ошибка
-    s = (F("ON"));                          //Повторения не будет?----------
-    if (millis() - myTimer4 >= 2400000) {
-      myTimer4 = millis();  // сбросить таймер
+  if (compr == HIGH) {
+    if (millis() - myTimer1 >= 1200000) {
+      myTimer1 = millis();  // сбросить таймер
       flag = true;// Флаг подняли
-      stch = 0;
-      isComprOn == 0;
-      //comprEndCycle();  
+      comprEndCycle();  
       delay(5);
     }
-    
-
-  if (!isLoadOn && currentMillis - previousMillis >= intervalOff) {
-      // Включаем нагрузку после интервала выключения
-        isLoadOn = true;
-        previousMillis = currentMillis;
-        digitalWrite(fanPin, HIGH);
-      } else if (isLoadOn && currentMillis - previousMillis >= intervalOn) {
-        // Выключаем нагрузку после интервала включения
-        isLoadOn = false;
-        previousMillis = currentMillis;
-        digitalWrite(fanPin, LOW);
-      }
-
   }
-
   if (isCheckingPass) {
     getTempAdd();                  // Проверяем тем-ру
     termo.setTempOld(thol, tmor);  // Записываем в память
@@ -247,9 +230,9 @@ void loop() {
     delay(5);
   }
   //проверяем: если кн == фолсе тогда переменная уст. в фалсе иначе если кн == труе переменная уст. труе.
-  // if (klapWork && flag) { klapan; }
-  //     Serial.println(thol);
-  //     Serial.println(tmor);
+  if (klapWork && flag) { klapan; }
+      Serial.println(thol);
+      Serial.println(tmor);
 
   //-------- Вывод на дисплей -------------     
  if (millis() - myTimer3 >= 60000) {
@@ -268,6 +251,7 @@ void loop() {
 
   delay(100);
 }
+
 //###################################
 void comprEndCycle() {
   // Сюда поставить таймер из гайвера ? Зачем?
@@ -280,8 +264,8 @@ void comprEndCycle() {
   wrk = (F("PAUSE"));
   // imp = isWorkKlap;
   s4 = (F("EndCy"));
-  //s1 = (F("P"));
-  //provH = (F("cEndC"));
+  s1 = (F("P"));
+  provH = (F("cEndC"));
   int i = 15;
 
   unsigned long comprTimeStamp = millis();  //Время включения компрессора
@@ -299,7 +283,7 @@ void comprEndCycle() {
 }
 // =================================================
 void proverkaKn() {
-  /*Проверяем */ 
+  /*Проверяем */
   //cycl.goCompr(isCheckingCompr);
   if (digitalRead(compr) == LOW) {
     digitalWrite(compr, HIGH);
@@ -307,33 +291,23 @@ void proverkaKn() {
   }
   wrk = (F("PROVERKA "));
   uint8_t stchet = 0;
-  getTempAdd();
   int8_t thl = thol;
   int8_t tmr = tmor;
   kn = sklad.getKn();
   bool klpn = true;
   int i = 0;
-  while (klpn == true && i <= 80) {
+  while (klpn = true) {
     stchet++;
     getTempAdd();
     if ((thol + 2) <= thl) {
       kn = true;
       klpn = false;
-      com = (F("thol"));
     } else if ((tmor + 2) <= tmr) {
       kn = false;
       klpn = false;
-      com = (F("tmor"));
-    }else (F("net "));
+    }
     i++;
     s1 = i;
-    isSummIsp = (tmor + 2) - tmr; // было неправильно
-    workMor = klpn;
-    // if(i == 18) {digitalWrite(7, HIGH);
-    // delay(30000);
-    // digitalWrite(7,
-    // LOW);
-    // }
     displ_Vvod();
     delay(30000);
   }
@@ -343,13 +317,18 @@ void proverkaKn() {
     prKn = 1;
   } else prKn = 0;
   // if(prKn == 1 && i <= 15){prKn = 1// нужна проверка клапана}
+
   //     }
   sklad.setKn(kn);
   comprEndCycle();
 }
 //-----------------------
 bool klapan(bool kn) {
-  kn = true;
+  digitalWrite(releKN, HIGH);
+  delay(10);
+  digitalWrite(releKN, LOW);
+  kn = !kn;
+  //kn = true;
   return kn;
 }
 //-----------------------
