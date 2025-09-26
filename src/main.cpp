@@ -127,7 +127,7 @@ void setup() {
     u8g.setPrintPos(8, 35);
     u8g.print(F(" _0Proba "));  //Написать download?
     u8g.setPrintPos(15, 45);
-    u8g.print(F("09.09.2025 "));
+    u8g.print(F("26.09.2025 "));
   } while (u8g.nextPage());  //Заканчивает вывод на экран
 
   delay(30000);  //900000; 15 минут
